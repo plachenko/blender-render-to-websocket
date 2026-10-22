@@ -1,10 +1,20 @@
 # Render to WebSocket — Blender add-on 1.15.0
 
+**Version 1.15.0.** A Blender add-on (Blender 4.2+) that streams finished renders out of Blender over a WebSocket and lets a browser drive the scene. It:
+
+- sends completed render files to connected clients as SHA-256-verified base64 chunks, and replays the latest output when a client reconnects,
+- accepts live pointer positions from the [URL Autofill](https://github.com/plachenko/url-autofill) web app to move and record Empties as normal keyframes,
+- advertises the scene's object list so the browser can pick and attach objects, and can start a still render on request,
+- can optionally start a configured Cloudflare named tunnel for remote access.
+
+This repository is the standalone home of the add-on. URL Autofill includes it as a git submodule at `blender-addon/`. The browser integration tests (`run_browser_tests.py`, `*.mjs`) expect to run from inside that URL Autofill checkout; everything else works standalone.
+
+
 Transfers completed Blender outputs in verified base64 chunks, replays the latest file after reconnect, and accepts pointer positions from URL Autofill to drive and record Empties.
 
 ## Install
 
-Run `python blender-addon/build.py` from the repository root. Install the resulting `blender-addon/render_to_websocket-1.15.0.zip` through Blender Preferences > Add-ons > Install from Disk. Restart Blender after replacing an already loaded version. Blender 4.2+ is targeted; integration tests use Blender 5.2.2.
+Run `python build.py` from this repository's root. Install the resulting `render_to_websocket-1.15.0.zip` through Blender Preferences > Add-ons > Install from Disk. Restart Blender after replacing an already loaded version. Blender 4.2+ is targeted; integration tests use Blender 5.2.2.
 
 The vendored pure-Python websockets runtime needs no pip installation. Its BSD license is included in `render_to_websocket/vendor/websockets-17.2.dist-info/licenses/LICENSE`. Original add-on author: Denis Perchenko.
 
@@ -43,7 +53,7 @@ Cloudflare controls start/stop only the configured named tunnel process launched
 
 ## Validate
 
-From `blender-addon/`:
+From this repository's root:
 
 ```text
 python -m unittest -v test_pointers.py test_replay.py test_transfer.py test_tunnel.py
